@@ -124,25 +124,25 @@ farmkart/
 ![Homepage](screenshots/homepage.jpg)
 
 ### Products Page
-![Products](screenshots/products%20page.jpg)
+![Products Page](screenshots/products%20page.jpg)
 
 ### Login Page
-![Login](screenshots/Login%20page.jpg)
+![Login Page](screenshots/Login%20page.jpg)
 
-### Cart
-![Cart](screenshots/cart.jpg)
+### Cart Page
+![Cart Page](screenshots/cart.jpg)
 
-### Checkout
-![Checkout](screenshots/checkout%201.jpg)
+### Checkout Page
+![Checkout Page](screenshots/checkout%201.jpg)
 
-### Checkout Step 2
-![Checkout2](screenshots/checkout%202.jpg)
+### Checkout Confirmation
+![Checkout Step 2](screenshots/checkout%202.jpg)
 
-### Payment
-![Payment](screenshots/payment%201.jpg)
+### Payment Page
+![Payment Page](screenshots/payment%201.jpg)
 
 ### Payment Success
-![Payment2](screenshots/payment%202.jpg)
+![Payment Success](screenshots/payment%202.jpg)
 
 ### Admin Dashboard
-![Admin](screenshots/admin%20Dashboard.jpg)
+![Admin Dashboard](screenshots/admin%20Dashboard.jpg)
