@@ -116,3 +116,33 @@ farmkart/
 - **Fonts:** Playfair Display + DM Sans (Google Fonts)
 - **Payment:** Razorpay
 - **Sessions:** Flask built-in sessions
+
+- 
+## 📸 Screenshots
+
+### Homepage
+![Homepage](screenshots/homepage.jpg)
+
+### Products Page
+![Products](screenshots/products%20page.jpg)
+
+### Login Page
+![Login](screenshots/Login%20page.jpg)
+
+### Cart
+![Cart](screenshots/cart.jpg)
+
+### Checkout
+![Checkout](screenshots/checkout%201.jpg)
+
+### Checkout Step 2
+![Checkout2](screenshots/checkout%202.jpg)
+
+### Payment
+![Payment](screenshots/payment%201.jpg)
+
+### Payment Success
+![Payment2](screenshots/payment%202.jpg)
+
+### Admin Dashboard
+![Admin](screenshots/admin%20Dashboard.jpg)
