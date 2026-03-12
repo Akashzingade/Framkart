@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard – FarmKart{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;margin-top:1rem">
+    <div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:2rem">👋 Welcome, {{ session['username'] }}!</h2>
+      <p style="color:var(--text-muted)">Ready for your fresh farm delivery?</p>
+    </div>
+    <div style="display:flex;gap:0.75rem">
+      <a href="{{ url_for('cart') }}" class="btn btn-primary">🛒 Cart (<span id="header-cart-count">{{ cart_count }}</span>)</a>
+      <a href="{{ url_for('profile') }}" class="btn btn-outline">👤 Profile</a>
+    </div>
+  </div>
+
+  {% if recent_orders %}
+  <div style="background:white;border-radius:var(--radius);box-shadow:var(--shadow);padding:1.5rem;margin-bottom:2rem">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+      <h3 style="font-family:'Playfair Display',serif">Recent Orders</h3>
+      <a href="{{ url_for('my_orders') }}" style="color:var(--green);font-size:0.85rem;font-weight:600">View All →</a>
+    </div>
+    <table class="cart-table">
+      <thead><tr><th>Order #</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for o in recent_orders %}
+        <tr>
+          <td><strong>#{{ o['id'] }}</strong></td>
+          <td style="font-size:0.85rem;color:var(--text-muted)">{{ o['order_date'][:10] }}</td>
+          <td><strong>₹{{ o['total_amount'] | round(2) }}</strong></td>
+          <td><span class="badge badge-green">{{ o['status'].upper() }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:1rem">🛒 Shop Products</h3>
+
+  <div class="category-pills">
+    <a href="{{ url_for('products') }}" class="pill">View All Products</a>
+    <a href="{{ url_for('products', category='vegetables') }}" class="pill">🥦 Vegetables</a>
+    <a href="{{ url_for('products', category='fruits') }}" class="pill">🍎 Fruits</a>
+    <a href="{{ url_for('products', category='dairy') }}" class="pill">🥛 Dairy</a>
+    <a href="{{ url_for('products', category='grains') }}" class="pill">🌾 Grains</a>
+  </div>
+
+  <div class="product-grid">
+    {% for p in products[:8] %}
+    <div class="product-card">
+      <img src="{{ url_for('static', filename='images/' + p['image']) }}" class="product-img" alt="{{ p['name'] }}" onerror="this.style.display='none'">
+      <div class="product-body">
+        <div class="product-category">{{ p['category'] }}</div>
+        <div class="product-name">{{ p['name'] }}</div>
+        <div class="product-desc">{{ p['description'] }}</div>
+        <div class="product-footer">
+          <div>
+            <div class="product-price">₹{{ p['price'] }}</div>
+            <div class="product-unit">per {{ p['unit'] }}</div>
+          </div>
+          {% if session.get('role') == 'admin' %}
+            <span class="badge badge-green">Admin</span>
+          {% else %}
+            <div class="add-btn-wrap" data-pid="{{ p['id'] }}">
+              <button class="btn btn-primary btn-sm" onclick="handleAdd({{ p['id'] }}, this)">+ Add</button>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

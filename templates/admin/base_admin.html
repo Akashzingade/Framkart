@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Admin – FarmKart{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="admin-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <h2>🌾 FarmKart</h2>
+      <p>Admin Panel</p>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="{{ url_for('admin_dashboard') }}" class="{{ 'active' if request.endpoint == 'admin_dashboard' }}">
+        <span>📊</span> Dashboard
+      </a>
+      <a href="{{ url_for('admin_products') }}" class="{{ 'active' if 'product' in request.endpoint }}">
+        <span>🌿</span> Products
+      </a>
+      <a href="{{ url_for('add_product') }}" class="{{ 'active' if request.endpoint == 'add_product' }}">
+        <span>➕</span> Add Product
+      </a>
+      <a href="{{ url_for('admin_orders') }}" class="{{ 'active' if request.endpoint == 'admin_orders' }}">
+        <span>📦</span> Orders
+      </a>
+      <a href="{{ url_for('admin_users') }}" class="{{ 'active' if request.endpoint == 'admin_users' }}">
+        <span>👥</span> Users
+      </a>
+      <a href="{{ url_for('index') }}">
+        <span>🏪</span> View Store
+      </a>
+      <a href="{{ url_for('logout') }}">
+        <span>🚪</span> Logout
+      </a>
+    </nav>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+      <div style="display:flex;align-items:center;gap:0.75rem">
+        <div style="text-align:right">
+          <div style="font-weight:600;font-size:0.9rem">{{ session['username'] }}</div>
+          <div style="font-size:0.75rem;color:var(--text-muted)">Administrator</div>
+        </div>
+        <div style="width:38px;height:38px;background:var(--green-pale);border-radius:50%;display:flex;align-items:center;justify-content:center">👤</div>
+      </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div style="padding:1rem 2rem 0">
+          {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="admin-content">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+</div>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

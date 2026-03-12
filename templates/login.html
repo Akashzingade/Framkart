@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login – FarmKart</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <h1>🌾 FarmKart</h1>
+      <p>Welcome back, farmer friend!</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}" style="margin-bottom:1rem">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" name="email" class="form-control" placeholder="you@example.com" required>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-full btn-lg" style="margin-top:0.5rem">
+        Login to FarmKart
+      </button>
+    </form>
+
+    <p class="text-center mt-2" style="font-size:0.85rem;color:var(--text-muted)">
+      Don't have an account? <a href="{{ url_for('register') }}" style="color:var(--green);font-weight:600">Sign up free</a>
+    </p>
+
+    <div style="margin-top:1.5rem;padding:1rem;background:#f9fafb;border-radius:8px;font-size:0.8rem;color:var(--text-muted)">
+      <strong style="color:var(--green)">Demo credentials:</strong><br>
+      Admin: admin@farmkart.com / admin123
+    </div>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

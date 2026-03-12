@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% block title %}Checkout – FarmKart{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+  <h2 class="section-title" style="margin-top:1rem">📦 Checkout</h2>
+  <p class="section-sub">Almost there! Enter your delivery details.</p>
+
+  <div class="checkout-layout">
+    <div>
+      <div style="background:white;border-radius:var(--radius);box-shadow:var(--shadow);padding:2rem">
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:1.5rem">📍 Delivery Address</h3>
+
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="fullName" class="form-control" placeholder="Your full name" value="{{ session.get('username', '') }}">
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" id="phone" class="form-control" placeholder="+91 XXXXX XXXXX">
+        </div>
+        <div class="form-group">
+          <label>Delivery Address</label>
+          <textarea id="address" class="form-control" rows="3" placeholder="House no, Street, Area"></textarea>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div class="form-group">
+            <label>City</label>
+            <input type="text" id="city" class="form-control" placeholder="City">
+          </div>
+          <div class="form-group">
+            <label>PIN Code</label>
+            <input type="text" id="pincode" class="form-control" placeholder="560001">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>State</label>
+          <input type="text" id="state" class="form-control" placeholder="Karnataka">
+        </div>
+      </div>
+
+      <div style="background:white;border-radius:var(--radius);box-shadow:var(--shadow);padding:2rem;margin-top:1.25rem">
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:1.25rem">💳 Payment Method</h3>
+        <div style="display:flex;flex-direction:column;gap:0.75rem" id="payment-options">
+          <label id="lbl-razorpay" onclick="selectPayment('razorpay')" style="display:flex;align-items:center;gap:0.75rem;padding:1rem;border:2px solid var(--green);border-radius:var(--radius-sm);cursor:pointer;background:var(--green-pale);transition:all 0.2s">
+            <input type="radio" name="payment" value="razorpay" checked id="pay-razorpay">
+            <div>
+              <strong>Razorpay</strong>
+              <div style="font-size:0.78rem;color:var(--text-muted)">UPI, Cards, Net Banking, Wallets</div>
+            </div>
+            <img src="https://razorpay.com/favicon.ico" style="width:24px;margin-left:auto" onerror="this.style.display='none'">
+          </label>
+          <label id="lbl-cod" onclick="selectPayment('cod')" style="display:flex;align-items:center;gap:0.75rem;padding:1rem;border:2px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;background:white;transition:all 0.2s">
+            <input type="radio" name="payment" value="cod" id="pay-cod">
+            <div>
+              <strong>Cash on Delivery</strong>
+              <div style="font-size:0.78rem;color:var(--text-muted)">Pay when your order arrives</div>
+            </div>
+            <span style="margin-left:auto;font-size:1.3rem">💵</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="summary-card">
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:1rem">🧺 Your Order</h3>
+
+        {% for item in items %}
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.85rem;padding-bottom:0.85rem;border-bottom:1px solid var(--border)">
+          <div style="width:44px;height:44px;background:var(--green-pale);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">🌿</div>
+          <div style="flex:1">
+            <div style="font-size:0.88rem;font-weight:600">{{ item['name'] }}</div>
+            <div style="font-size:0.75rem;color:var(--text-muted)">{{ item['quantity'] }} × ₹{{ item['price'] }}</div>
+          </div>
+          <div style="font-weight:600;font-size:0.9rem">₹{{ (item['price'] * item['quantity']) | round(2) }}</div>
+        </div>
+        {% endfor %}
+
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span>₹{{ total | round(2) }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Delivery</span>
+          <span style="color:var(--green);font-weight:600">FREE</span>
+        </div>
+        <div class="summary-row total">
+          <span>Total Payable</span>
+          <span>₹{{ total | round(2) }}</span>
+        </div>
+
+        <button class="btn btn-primary btn-full btn-lg" style="margin-top:1.25rem" onclick="handleCheckout()">
+          🔒 Pay ₹{{ total | round(2) }}
+        </button>
+
+        <p style="font-size:0.72rem;color:var(--text-muted);text-align:center;margin-top:0.75rem">
+          Your payment is secured and encrypted
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+const RAZORPAY_KEY = '{{ razorpay_key }}';
+
+function selectPayment(method) {
+  // Check the radio
+  document.getElementById('pay-' + method).checked = true;
+
+  // Reset both labels
+  const lblRazorpay = document.getElementById('lbl-razorpay');
+  const lblCod = document.getElementById('lbl-cod');
+
+  lblRazorpay.style.border = '2px solid var(--border)';
+  lblRazorpay.style.background = 'white';
+  lblCod.style.border = '2px solid var(--border)';
+  lblCod.style.background = 'white';
+
+  // Highlight selected
+  const selected = document.getElementById('lbl-' + method);
+  selected.style.border = '2px solid var(--green)';
+  selected.style.background = 'var(--green-pale)';
+}
+
+function getFullAddress() {
+  const name = document.getElementById('fullName').value;
+  const phone = document.getElementById('phone').value;
+  const addr = document.getElementById('address').value;
+  const city = document.getElementById('city').value;
+  const pin = document.getElementById('pincode').value;
+  const state = document.getElementById('state').value;
+  return [name, phone, addr, city, pin, state].filter(Boolean).join(', ');
+}
+
+function handleCheckout() {
+  const address = getFullAddress();
+  if (!document.getElementById('address').value.trim()) {
+    alert('Please enter your delivery address');
+    document.getElementById('address').focus();
+    return;
+  }
+
+  const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+
+  if (paymentMethod === 'cod') {
+    if (confirm('Confirm Cash on Delivery order?')) {
+      completeCodOrder(address);
+    }
+    return;
+  }
+
+  initiatePayment(address);
+}
+
+async function completeCodOrder(address) {
+  const res = await fetch('/payment-success', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      payment_id: 'cod_' + Date.now(),
+      is_cod: true,
+      address: address
+    })
+  });
+  const data = await res.json();
+  if (data.success) {
+    window.location.href = '/order-success/' + data.order_id;
+  }
+}
+</script>
+{% endblock %}

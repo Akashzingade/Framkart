@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}My Orders – FarmKart{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;margin-top:1rem">
+    <div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:2rem">📦 My Orders</h2>
+      <p style="color:var(--text-muted)">Track and view all your past orders</p>
+    </div>
+    <a href="{{ url_for('products') }}" class="btn btn-primary">+ New Order</a>
+  </div>
+
+  {% if orders_with_items %}
+    {% for oi in orders_with_items %}
+    <div class="order-card">
+      <div class="order-header">
+        <div>
+          <strong>Order #{{ oi['order']['id'] }}</strong>
+          <div style="font-size:0.78rem;color:var(--text-muted)">{{ oi['order']['order_date'][:16] }}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--green)">
+            ₹{{ oi['order']['total_amount'] | round(2) }}
+          </div>
+          <span class="badge badge-green">{{ oi['order']['status'].upper() }}</span>
+        </div>
+      </div>
+      <div class="order-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div>
+            <h4 style="font-size:0.8rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem">ITEMS</h4>
+            <ul class="order-items-list">
+              {% for item in oi['items'] %}
+              <li>
+                <span>{{ item['name'] }} × {{ item['quantity'] }}</span>
+                <span>₹{{ (item['price'] * item['quantity']) | round(2) }}</span>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+          <div>
+            <h4 style="font-size:0.8rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem">DELIVERY TO</h4>
+            <p style="font-size:0.85rem">{{ oi['order']['address'] }}</p>
+            {% if oi['order']['payment_id'] %}
+            <div style="margin-top:0.5rem;font-size:0.75rem;color:var(--text-muted)">
+              Payment: {{ oi['order']['payment_id'][:20] }}…
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">📦</div>
+      <h3>No orders yet</h3>
+      <p>Start shopping and your orders will appear here.</p>
+      <a href="{{ url_for('products') }}" class="btn btn-primary btn-lg">Browse Products</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

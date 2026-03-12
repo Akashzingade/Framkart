@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register – FarmKart</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <h1>🌾 FarmKart</h1>
+      <p>Join thousands of happy customers!</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}" style="margin-bottom:1rem">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" name="username" class="form-control" placeholder="Choose a username" required>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" name="email" class="form-control" placeholder="you@example.com" required>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" class="form-control" placeholder="Minimum 6 characters" required minlength="6">
+      </div>
+      <button type="submit" class="btn btn-primary btn-full btn-lg" style="margin-top:0.5rem">
+        Create My Account
+      </button>
+    </form>
+
+    <p class="text-center mt-2" style="font-size:0.85rem;color:var(--text-muted)">
+      Already have an account? <a href="{{ url_for('login') }}" style="color:var(--green);font-weight:600">Login here</a>
+    </p>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

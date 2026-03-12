@@ -1,0 +1,60 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Edit Product – FarmKart Admin{% endblock %}
+{% block page_title %}Edit Product{% endblock %}
+
+{% block content %}
+<div style="max-width:640px">
+  <a href="{{ url_for('admin_products') }}" style="color:var(--text-muted);font-size:0.85rem;text-decoration:none;display:inline-flex;align-items:center;gap:0.25rem;margin-bottom:1.5rem">
+    ← Back to Products
+  </a>
+
+  <div style="background:white;border-radius:var(--radius);box-shadow:var(--shadow);padding:2rem">
+    <form method="POST" enctype="multipart/form-data">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="form-group" style="grid-column:1/-1">
+          <label>Product Name *</label>
+          <input type="text" name="name" class="form-control" value="{{ product['name'] }}" required>
+        </div>
+        <div class="form-group">
+          <label>Price (₹) *</label>
+          <input type="number" name="price" class="form-control" value="{{ product['price'] }}" min="0" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label>Unit</label>
+          <select name="unit" class="form-control">
+            {% for u in ['kg','bunch','liter','dozen','500g','250g','piece'] %}
+            <option value="{{ u }}" {{ 'selected' if product['unit'] == u }}>{{ u }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select name="category" class="form-control">
+            {% for c in ['vegetables','fruits','dairy','grains','others'] %}
+            <option value="{{ c }}" {{ 'selected' if product['category'] == c }}>{{ c.title() }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Stock</label>
+          <input type="number" name="stock" class="form-control" value="{{ product['stock'] }}" min="0">
+        </div>
+        <div class="form-group" style="grid-column:1/-1">
+          <label>Description</label>
+          <textarea name="description" class="form-control" rows="3">{{ product['description'] }}</textarea>
+        </div>
+        <div class="form-group" style="grid-column:1/-1">
+          <label>Replace Image (optional)</label>
+          <input type="file" name="image" class="form-control" accept="image/*">
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.25rem">Current: {{ product['image'] }}</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:0.75rem;margin-top:0.5rem">
+        <button type="submit" class="btn btn-primary btn-lg">💾 Save Changes</button>
+        <a href="{{ url_for('admin_products') }}" class="btn btn-outline btn-lg">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

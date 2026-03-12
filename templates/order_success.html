@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Order Confirmed – FarmKart{% endblock %}
+
+{% block content %}
+<div class="success-page">
+  <div class="success-card">
+    <div class="success-icon">✅</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:2rem;margin-bottom:0.5rem">Order Confirmed!</h2>
+    <p style="color:var(--text-muted);margin-bottom:1.5rem">
+      Thank you for your purchase. Your fresh farm products are being prepared!
+    </p>
+
+    <div style="background:#f9fafb;border-radius:var(--radius-sm);padding:1.25rem;margin-bottom:1.5rem;text-align:left">
+      <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem">
+        <span style="font-size:0.85rem;color:var(--text-muted)">Order ID</span>
+        <strong>#{{ order['id'] }}</strong>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem">
+        <span style="font-size:0.85rem;color:var(--text-muted)">Payment ID</span>
+        <strong style="font-size:0.8rem">{{ order['payment_id'] }}</strong>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem">
+        <span style="font-size:0.85rem;color:var(--text-muted)">Amount Paid</span>
+        <strong style="color:var(--green)">₹{{ order['total_amount'] | round(2) }}</strong>
+      </div>
+      <div style="display:flex;justify-content:space-between">
+        <span style="font-size:0.85rem;color:var(--text-muted)">Status</span>
+        <span class="badge {{ 'badge-amber' if order['status'] == 'pending' else 'badge-green' }}">
+          {{ 'CASH ON DELIVERY' if order['status'] == 'pending' else order['status'].upper() }}
+        </span>
+      </div>
+    </div>
+
+    <div style="margin-bottom:1.5rem;text-align:left">
+      <h4 style="font-size:0.85rem;font-weight:600;margin-bottom:0.75rem;color:var(--text-muted)">ITEMS ORDERED</h4>
+      {% for item in items %}
+      <div style="display:flex;justify-content:space-between;padding:0.4rem 0;font-size:0.88rem;border-bottom:1px solid var(--border)">
+        <span>{{ item['name'] }} × {{ item['quantity'] }}</span>
+        <span>₹{{ (item['price'] * item['quantity']) | round(2) }}</span>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:0.75rem">
+      <a href="{{ url_for('my_orders') }}" class="btn btn-primary btn-full">View My Orders</a>
+      <a href="{{ url_for('products') }}" class="btn btn-outline btn-full">Continue Shopping</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

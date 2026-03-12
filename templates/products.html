@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Shop – FarmKart{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+  <h2 class="section-title" style="margin-top:1rem">🛒 Farm Products</h2>
+  <p class="section-sub">Fresh harvests, delivered from local farms to your kitchen</p>
+
+  <form class="search-bar" method="GET" action="{{ url_for('products') }}">
+    <input type="text" name="search" placeholder="Search products…" value="{{ search or '' }}">
+    <button type="submit" class="btn btn-primary">Search</button>
+    {% if search %}
+      <a href="{{ url_for('products') }}" class="btn btn-outline">Clear</a>
+    {% endif %}
+  </form>
+
+  <div class="category-pills">
+    <a href="{{ url_for('products') }}" class="pill {% if not selected %}active{% endif %}">🌿 All</a>
+    {% for cat in categories %}
+    <a href="{{ url_for('products', category=cat['category']) }}"
+       class="pill {% if selected == cat['category'] %}active{% endif %}">
+      {{ {'vegetables':'🥦','fruits':'🍎','dairy':'🥛','grains':'🌾','others':'🍯'}.get(cat['category'],'🌿') }}
+      {{ cat['category'].title() }}
+    </a>
+    {% endfor %}
+  </div>
+
+  {% if products %}
+  <div class="product-grid">
+    {% for p in products %}
+    <div class="product-card">
+      <img src="{{ url_for('static', filename='images/' + p['image']) }}" class="product-img" alt="{{ p['name'] }}" onerror="this.style.display='none'">
+      <div class="product-body">
+        <div class="product-category">{{ p['category'] }}</div>
+        <div class="product-name">{{ p['name'] }}</div>
+        <div class="product-desc">{{ p['description'] }}</div>
+        <div class="product-footer">
+          <div>
+            <div class="product-price">₹{{ p['price'] }}</div>
+            <div class="product-unit">per {{ p['unit'] }}</div>
+          </div>
+                              {% if session.get('role') == 'admin' %}
+            <span class="badge badge-green">Admin</span>
+          {% else %}
+            <div class="add-btn-wrap" data-pid="{{ p['id'] }}">
+              {% if session.get('user_id') %}
+                <button class="btn btn-primary btn-sm" onclick="handleAdd({{ p['id'] }}, this)">+ Add</button>
+              {% else %}
+                <a href="{{ url_for('login') }}" class="btn btn-outline btn-sm">Login</a>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">🔍</div>
+    <h3>No products found</h3>
+    <p>Try a different search or category.</p>
+    <a href="{{ url_for('products') }}" class="btn btn-primary">View All</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

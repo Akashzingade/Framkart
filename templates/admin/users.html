@@ -1,0 +1,53 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Users – FarmKart Admin{% endblock %}
+{% block page_title %}Manage Users{% endblock %}
+
+{% block content %}
+<p style="color:var(--text-muted);margin-bottom:1.5rem">{{ users | length }} registered users</p>
+
+<div style="background:white;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Orders</th>
+        <th>Joined</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in users %}
+      <tr>
+        <td>{{ u['id'] }}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:0.5rem">
+            <div style="width:32px;height:32px;background:var(--green-pale);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem">👤</div>
+            <strong>{{ u['username'] }}</strong>
+          </div>
+        </td>
+        <td>{{ u['email'] }}</td>
+        <td>
+          <span class="badge {{ 'badge-amber' if u['role'] == 'admin' else 'badge-blue' }}">
+            {{ u['role'].upper() }}
+          </span>
+        </td>
+        <td>{{ u['order_count'] }}</td>
+        <td style="font-size:0.82rem;color:var(--text-muted)">{{ u['created_at'][:10] }}</td>
+        <td>
+          {% if u['role'] != 'admin' %}
+          <form method="POST" action="{{ url_for('delete_user', uid=u['id']) }}" onsubmit="return confirm('Delete user {{ u.username }}?')">
+            <button type="submit" class="btn btn-danger btn-sm">🗑 Delete</button>
+          </form>
+          {% else %}
+          <span class="badge badge-gray">Protected</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
